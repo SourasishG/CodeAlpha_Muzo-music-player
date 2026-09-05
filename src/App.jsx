@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePlayerSync } from './hooks/usePlayerSync';
 import { usePlayerStore } from './store/usePlayerStore';
 import { SEARCH_STATUS } from './config/constants';
@@ -6,20 +6,19 @@ import { SearchBar } from './components/SearchBar';
 import { PlayerCard } from './components/PlayerCard';
 import { Playlist } from './components/Playlist';
 import { SearchResults } from './components/SearchResults';
-import { ListMusic, Compass } from 'lucide-react';
+import { ListMusic, Compass, X } from 'lucide-react';
 
 export default function App() {
-  // Synchronizes browser audio engine with the Zustand store
   usePlayerSync();
 
   const error = usePlayerStore((state) => state.error);
+  const setError = usePlayerStore((state) => state.setError);
   const searchStatus = usePlayerStore((state) => state.searchStatus);
 
-  // Tab state: 'queue' or 'discovery'
   const [activeTab, setActiveTab] = useState('queue');
   const [prevSearchStatus, setPrevSearchStatus] = useState(searchStatus);
 
-  // Adjust state during render when searchStatus changes (avoids cascading render warning)
+  // Switch to discovery during render when a search starts
   if (searchStatus !== prevSearchStatus) {
     setPrevSearchStatus(searchStatus);
     if (
@@ -30,7 +29,16 @@ export default function App() {
     }
   }
 
-  // Determine button classes without ternary operators
+  // Auto-dismiss the error banner after 4 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError(null);
+      }, 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, setError]);
+
   let queueTabClass = 'tab-btn';
   let isQueueSelected = false;
   if (activeTab === 'queue') {
@@ -45,13 +53,11 @@ export default function App() {
     isDiscoverySelected = true;
   }
 
-  // Determine aria-labelledby without ternary operators
   let panelLabelledBy = 'tab-queue';
   if (activeTab === 'discovery') {
     panelLabelledBy = 'tab-discovery';
   }
 
-  // Render the selected right-hand panel without ternary operators
   const renderSidePanel = () => {
     if (activeTab === 'discovery') {
       return <SearchResults />;
@@ -66,21 +72,27 @@ export default function App() {
         <SearchBar />
       </header>
 
-      {/* Global Error Banner */}
+      {/* Dismissable Error Banner */}
       {error && (
-        <div className="error-banner" role="alert">
-          <p>{error}</p>
+        <div className="error-banner" role="alert" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span>{error}</span>
+          <button
+            type="button"
+            onClick={() => setError(null)}
+            style={{ display: 'flex', alignItems: 'center', opacity: 0.7 }}
+            aria-label="Dismiss error"
+          >
+            <X size={14} />
+          </button>
         </div>
       )}
 
-      {/* Main Layout Grid */}
+      {/* Main Layout */}
       <div className="player-layout">
-        {/* Left Column: Neumorphic Player Card */}
         <div className="player-column">
           <PlayerCard />
         </div>
 
-        {/* Right Column: Queue / Discovery Panel with Accessible Switcher */}
         <div className="panel-column">
           <nav
             className="view-tabs"
