@@ -1,0 +1,61 @@
+:root {
+  /* --- COLOR PALETTE --- */
+  --page-bg: #e0e5ec;
+  --surface-bg: #e0e5ec;
+  
+  /* Text colors (High contrast for accessibility) */
+  --text-primary: #2d3748;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+
+  /* Primary Orange Accents */
+  --accent: #ff6b35;
+  --accent-hover: #fa571e;
+  --accent-active: #e84c13;
+  --accent-shadow: 0 6px 16px rgba(255, 107, 53, 0.35);
+
+  /* Status Colors */
+  --color-error: #e53e3e;
+  --color-error-bg: #fed7d7;
+
+  /* --- NEUMORPHIC DUAL SHADOWS --- */
+  /* Standard raised card */
+  --shadow-card: 14px 14px 28px rgba(163, 177, 198, 0.6),
+                 -14px -14px 28px rgba(255, 255, 255, 0.85);
+
+  /* Raised buttons & controls */
+  --shadow-raised: 5px 5px 10px rgba(163, 177, 198, 0.55),
+                   -5px -5px 10px rgba(255, 255, 255, 0.85);
+
+  /* Subtle raised element */
+  --shadow-raised-sm: 3px 3px 6px rgba(163, 177, 198, 0.45),
+                      -3px -3px 6px rgba(255, 255, 255, 0.8);
+
+  /* Inset / Pressed / Active states */
+  --shadow-inset: inset 3px 3px 6px rgba(163, 177, 198, 0.6),
+                  inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+
+  /* Sliders and track troughs */
+  --shadow-trough: inset 2px 2px 5px rgba(163, 177, 198, 0.5),
+                   inset -2px -2px 5px rgba(255, 255, 255, 0.8);
+
+  /* Focus outline for keyboard navigation */
+  --focus-ring: 0 0 0 3px rgba(255, 107, 53, 0.45);
+
+  /* --- BORDER RADII --- */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-round: 50%;
+
+  /* --- SPACING TOKENS --- */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* --- TRANSITIONS --- */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+}

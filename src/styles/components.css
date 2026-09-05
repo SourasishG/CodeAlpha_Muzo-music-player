@@ -1,0 +1,724 @@
+/* ==========================================================================
+   1. SINGLE-PAGE APP LAYOUT (ZERO PAGE SCROLLING)
+   ========================================================================== */
+
+/* Main container constrained strictly to the viewport height */
+.app-container {
+  width: 100%;
+  max-width: 900px;
+  height: 100%;
+  max-height: calc(100vh - 28px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  overflow: hidden;
+}
+
+/* Centered search bar header */
+.app-header {
+  width: 100%;
+  max-width: 780px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Side-by-side layout for Player and Queue/Discovery */
+.player-layout {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 32px;
+}
+
+/* Dismissable alert banner */
+.error-banner {
+  padding: 4px var(--space-md);
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: var(--shadow-raised-sm);
+}
+
+/* ==========================================================================
+   2. SEARCH BAR COMPONENT
+   ========================================================================== */
+
+.search-bar-form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.search-leading-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+/* Recessed neumorphic search input */
+.search-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 42px 0 44px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-bg);
+  border: none;
+  box-shadow: var(--shadow-trough);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  outline: none;
+}
+
+.search-input:focus {
+  box-shadow: var(--shadow-trough), var(--focus-ring);
+}
+
+/* Remove default browser clear button in Chrome/Edge/Safari */
+.search-input::-webkit-search-cancel-button,
+.search-input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+  display: none;
+}
+
+/* Single custom clear button (X) */
+.search-clear-btn {
+  position: absolute;
+  right: 8px;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-round);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.search-clear-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Raised search submit button */
+.search-submit-btn {
+  height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-bg);
+  box-shadow: var(--shadow-raised);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.search-submit-btn:active:not(:disabled) {
+  box-shadow: var(--shadow-inset);
+  transform: translateY(0);
+}
+
+.search-spinner {
+  animation: spin 1s linear infinite;
+  color: var(--accent);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   3. VIEW TABS (QUEUE vs DISCOVERY)
+   ========================================================================== */
+
+.panel-column {
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.view-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.tab-btn {
+  flex: 1;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background: var(--surface-bg);
+  box-shadow: var(--shadow-raised-sm);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--transition-fast);
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.is-active {
+  box-shadow: var(--shadow-inset);
+  color: var(--accent);
+}
+
+.panel-content-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   4. NEUMORPHIC CARDS
+   ========================================================================== */
+
+.player-card,
+.playlist-container,
+.search-results-panel {
+  width: 100%;
+  max-width: 360px;
+  background: var(--surface-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden; /* Guarantees no child element ever spills outside the card */
+}
+
+/* ==========================================================================
+   5. PLAYER HEADER & ALBUM TITLE (OVERFLOW BUG FIXED HERE)
+   ========================================================================== */
+
+.player-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0; /* Allows flex children to shrink */
+  overflow: hidden;
+}
+
+.player-header-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-round);
+  box-shadow: var(--shadow-raised-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  flex-shrink: 0; /* Prevents icon from being squished by long album titles */
+}
+
+/* Crucial Flexbox Fix: min-width: 0 allows text truncation inside flexbox */
+.player-header-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.player-header-badge {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+/* Clean ellipsis truncation for long soundtrack / album titles */
+.player-header-album {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.playlist-header,
+.search-results-header,
+.playlist-title-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.playlist-header,
+.search-results-header { justify-content: space-between; }
+.playlist-title-wrap { gap: 8px; color: var(--accent); }
+.playlist-count,
+.search-results-count { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
+
+.track-artist,
+.result-track-title,
+.result-artist,
+.result-album,
+.playlist-item-title,
+.playlist-item-artist {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   6. ARTWORK & TRAIN MARQUEE TRACK TITLE
+   ========================================================================== */
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+.artwork-container {
+  width: 160px;
+  height: 160px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-raised);
+  padding: 4px;
+  transition: transform var(--transition-normal);
+}
+
+.artwork-container.is-playing { transform: scale(1.02); }
+.artwork-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: calc(var(--radius-lg) - 4px);
+}
+
+.track-details {
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  gap: 2px;
+}
+
+/* Title container that strictly clips overflowing text */
+.track-title-wrapper {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* Edge gradient mask: creates a soft fade on left and right borders */
+.track-title-wrapper.is-overflowing {
+  justify-content: flex-start;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 12px,
+    black calc(100% - 12px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 12px,
+    black calc(100% - 12px),
+    transparent 100%
+  );
+}
+
+.track-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  white-space: nowrap;
+  display: inline-block;
+  will-change: transform;
+}
+
+/* The Train / Ping-Pong Animation (Only runs when text exceeds card width) */
+.track-title.is-marquee {
+  animation: trainMarquee var(--marquee-duration, 6s) ease-in-out 1.5s infinite alternate;
+}
+
+@keyframes trainMarquee {
+  0%, 20% {
+    transform: translateX(0); /* Pause at start so user reads title beginning */
+  }
+  80%, 100% {
+    transform: translateX(var(--marquee-dist, -100px)); /* Glide to end and pause */
+  }
+}
+
+.track-artist {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.track-provider-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.track-preview-pill {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--accent);
+  background: rgba(255, 107, 53, 0.12);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.track-external-anchor {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.track-external-anchor:hover { color: var(--accent); }
+
+/* ==========================================================================
+   7. TIMELINE & VOLUME SLIDERS
+   ========================================================================== */
+
+.progress-container,
+.volume-container {
+  display: flex;
+  gap: 4px;
+}
+
+.progress-container { flex-direction: column; }
+.volume-container { align-items: center; gap: 8px; }
+.progress-timestamps {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.progress-slider,
+.volume-slider {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-trough);
+  outline: none;
+}
+
+.progress-slider {
+  height: 6px;
+  background: linear-gradient(
+    to right,
+    var(--accent) 0%,
+    var(--accent) var(--progress-percent, 0%),
+    transparent var(--progress-percent, 0%)
+  );
+}
+
+.volume-slider {
+  height: 5px;
+  background: linear-gradient(
+    to right,
+    var(--accent) 0%,
+    var(--accent) var(--volume-percent, 80%),
+    transparent var(--volume-percent, 80%)
+  );
+}
+
+.progress-slider::-webkit-slider-thumb,
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-round);
+  background: var(--surface-bg);
+  border: 2px solid var(--accent);
+  box-shadow: var(--shadow-raised-sm);
+}
+
+.progress-slider::-moz-range-thumb,
+.volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-round);
+  background: var(--surface-bg);
+  border: 2px solid var(--accent);
+  box-shadow: var(--shadow-raised-sm);
+}
+
+/* ==========================================================================
+   8. PLAYBACK CONTROLS
+   ========================================================================== */
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.control-btn,
+.volume-mute-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-round);
+  background: var(--surface-bg);
+  transition: all var(--transition-fast);
+}
+
+.secondary-btn {
+  width: 38px;
+  height: 38px;
+  box-shadow: var(--shadow-raised);
+  color: var(--text-secondary);
+}
+
+.secondary-btn:active:not(:disabled),
+.secondary-btn.is-active,
+.volume-mute-btn:active {
+  box-shadow: var(--shadow-inset);
+  color: var(--accent);
+}
+
+.primary-btn {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(145deg, #ff7b47, #e85925);
+  box-shadow: var(--shadow-raised), var(--accent-shadow);
+  color: #fff;
+}
+
+.primary-btn:hover:not(:disabled) { transform: scale(1.04); }
+.primary-btn:active:not(:disabled) { box-shadow: var(--shadow-inset); transform: scale(0.98); }
+.play-icon-offset { margin-left: 2px; }
+
+.volume-mute-btn {
+  width: 28px;
+  height: 28px;
+  box-shadow: var(--shadow-raised-sm);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   9. DISCOVERY & SEARCH RESULTS (SCROLLS INTERNALLY)
+   ========================================================================== */
+
+.search-results-panel {
+  height: 420px;
+}
+
+.search-results-title { font-size: 1rem; font-weight: 800; }
+.search-results-content {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.search-status-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-lg) var(--space-sm);
+  gap: 8px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.search-status-box.search-error { color: var(--color-error); }
+.search-results-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: var(--radius-md);
+  background: var(--surface-bg);
+  transition: all var(--transition-fast);
+}
+
+.search-result-item.is-active { box-shadow: var(--shadow-inset); }
+.search-result-item.is-active .result-track-title { color: var(--accent); }
+
+.search-result-thumb-wrap {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+.search-result-thumb {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.result-preview-btn {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.search-result-thumb-wrap:hover .result-preview-btn,
+.result-preview-btn.is-playing { opacity: 1; }
+.result-preview-btn.is-playing { background: rgba(255, 107, 53, 0.85); }
+
+.result-no-preview-badge {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-sm);
+  background: rgba(163, 177, 198, 0.35);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-result-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.result-track-title { font-size: 0.82rem; font-weight: 700; }
+.result-track-meta { font-size: 0.7rem; color: var(--text-secondary); display: flex; gap: 4px; }
+.result-separator { color: var(--text-muted); }
+.result-duration { font-size: 0.68rem; color: var(--text-muted); font-weight: 600; }
+
+.search-result-actions { display: flex; align-items: center; gap: 6px; }
+.result-action-btn,
+.result-action-link {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-round);
+  background: var(--surface-bg);
+  box-shadow: var(--shadow-raised-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.result-action-btn:active { box-shadow: var(--shadow-inset); }
+
+/* ==========================================================================
+   10. QUEUE / PLAYLIST (SCROLLS INTERNALLY)
+   ========================================================================== */
+
+.playlist-container {
+  height: 420px;
+}
+
+.playlist-title { font-size: 1rem; font-weight: 800; }
+.playlist-clear-btn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.playlist-clear-btn:hover { color: var(--color-error); }
+.playlist-empty { padding: var(--space-md); text-align: center; font-size: 0.8rem; color: var(--text-muted); }
+
+.playlist-list {
+  flex: 1;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.playlist-item-row { display: flex; align-items: center; gap: 6px; }
+.playlist-item-btn {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+.playlist-item-btn.is-active { box-shadow: var(--shadow-inset); }
+.playlist-item-btn.is-active .playlist-item-title { color: var(--accent); font-weight: 800; }
+.playlist-item-indicator { width: 16px; text-align: center; font-size: 0.75rem; color: var(--text-muted); font-weight: 700; }
+.playlist-active-icon { color: var(--accent); }
+.playlist-item-thumb { width: 34px; height: 34px; border-radius: var(--radius-sm); object-fit: cover; }
+.playlist-item-meta { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.playlist-item-title { font-size: 0.82rem; font-weight: 700; }
+.playlist-item-artist { font-size: 0.7rem; color: var(--text-secondary); }
+.playlist-item-duration { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; }
+
+.playlist-item-remove-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-round);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  opacity: 0;
+}
+
+.playlist-item-row:hover .playlist-item-remove-btn { opacity: 1; }
+.playlist-item-remove-btn:hover { color: var(--color-error); }

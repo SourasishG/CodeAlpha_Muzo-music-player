@@ -1,0 +1,101 @@
+/* ==========================================================================
+   RESPONSIVE DESIGN (MOBILE-FIRST)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TABLET & DESKTOP (Min-width: 768px)
+   Side-by-side layout: Player on left, Queue/Discovery on right
+   -------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+  .player-layout {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--space-xl);
+  }
+
+  /* Fixed-width player column */
+  .player-column {
+    flex: 0 0 380px;
+  }
+
+  /* Flexible side panel column for Queue and Discovery */
+  .panel-column {
+    flex: 1;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Custom subtle scrollbars for panel contents */
+  .search-results-content::-webkit-scrollbar,
+  .playlist-list::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .search-results-content::-webkit-scrollbar-track,
+  .playlist-list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .search-results-content::-webkit-scrollbar-thumb,
+  .playlist-list::-webkit-scrollbar-thumb {
+    background: rgba(163, 177, 198, 0.5);
+    border-radius: var(--radius-sm);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. MOBILE VIEWPORTS (Max-width: 767px)
+   Stacked layout with centered panels
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  .panel-column {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .view-tabs {
+    max-width: 400px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. SMALL SMARTPHONES (Max-width: 380px)
+   Compact scaling for small screens to prevent horizontal overflow
+   -------------------------------------------------------------------------- */
+@media (max-width: 380px) {
+  .player-card,
+  .playlist-container,
+  .search-results-panel {
+    padding: var(--space-md);
+  }
+
+  .artwork-container {
+    width: 180px;
+    height: 180px;
+  }
+
+  .secondary-btn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .primary-btn {
+    width: 58px;
+    height: 58px;
+  }
+
+  .search-input {
+    height: 40px;
+    font-size: 0.85rem;
+  }
+
+  .search-submit-btn {
+    height: 40px;
+    padding: 0 var(--space-md);
+  }
+}
