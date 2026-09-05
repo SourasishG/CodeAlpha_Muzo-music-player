@@ -1,34 +1,28 @@
 /* ==========================================================================
-   RESPONSIVE DESIGN (MOBILE-FIRST)
+   RESPONSIVE DESIGN (DESKTOP ZERO-SCROLL vs MOBILE STACK)
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. TABLET & DESKTOP (Min-width: 768px)
-   Side-by-side layout: Player on left, Queue/Discovery on right
+   1. DESKTOP & TABLETS (Min-width: 768px)
+   Keeps the locked single-page side-by-side view (Zero browser scrollbars)
    -------------------------------------------------------------------------- */
 @media (min-width: 768px) {
   .player-layout {
     flex-direction: row;
     align-items: flex-start;
     justify-content: center;
-    gap: var(--space-xl);
+    gap: 32px;
   }
 
-  /* Fixed-width player column */
   .player-column {
-    flex: 0 0 380px;
+    flex: 0 0 360px;
   }
 
-  /* Flexible side panel column for Queue and Discovery */
   .panel-column {
-    flex: 1;
-    max-width: 420px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex: 0 0 360px;
   }
 
-  /* Custom subtle scrollbars for panel contents */
+  /* Internal subtle scrollbars for panel contents */
   .search-results-content::-webkit-scrollbar,
   .playlist-list::-webkit-scrollbar {
     width: 6px;
@@ -48,54 +42,93 @@
 
 /* --------------------------------------------------------------------------
    2. MOBILE VIEWPORTS (Max-width: 767px)
-   Stacked layout with centered panels
+   Fixes the squished layout: stacks into a single column with natural scrolling
    -------------------------------------------------------------------------- */
 @media (max-width: 767px) {
-  .panel-column {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  /* Unlock viewport height on mobile so users can scroll down to the Queue */
+  html,
+  body,
+  #root {
+    height: auto !important;
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important; /* Eliminates side-scrolling completely */
+  }
+
+  #root {
+    padding: 16px 12px 32px 12px !important;
+    justify-content: flex-start !important;
+  }
+
+  .app-container {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    gap: 16px !important;
+  }
+
+  /* Stack Player Card and Queue vertically instead of side-by-side */
+  .player-layout {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 20px !important;
+  }
+
+  /* Center all cards and make them fit the phone screen width */
+  .player-column,
+  .panel-column,
+  .player-card,
+  .playlist-container,
+  .search-results-panel {
+    width: 100% !important;
+    max-width: 380px !important;
   }
 
   .view-tabs {
-    max-width: 400px;
+    max-width: 380px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Slightly tighter card padding for phone screens */
+  .player-card,
+  .playlist-container,
+  .search-results-panel {
+    padding: 16px !important;
+  }
+
+  /* Scale artwork so the player is compact on mobile */
+  .artwork-container {
+    width: 150px !important;
+    height: 150px !important;
+  }
+
+  .search-input {
+    height: 42px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .search-submit-btn {
+    height: 42px !important;
+    padding: 0 16px !important;
   }
 }
 
 /* --------------------------------------------------------------------------
-   3. SMALL SMARTPHONES (Max-width: 380px)
-   Compact scaling for small screens to prevent horizontal overflow
+   3. EXTRA-COMPACT PHONES (Max-width: 360px)
    -------------------------------------------------------------------------- */
-@media (max-width: 380px) {
-  .player-card,
-  .playlist-container,
-  .search-results-panel {
-    padding: var(--space-md);
-  }
-
+@media (max-width: 360px) {
   .artwork-container {
-    width: 180px;
-    height: 180px;
+    width: 135px !important;
+    height: 135px !important;
   }
 
   .secondary-btn {
-    width: 38px;
-    height: 38px;
+    width: 34px !important;
+    height: 34px !important;
   }
 
   .primary-btn {
-    width: 58px;
-    height: 58px;
-  }
-
-  .search-input {
-    height: 40px;
-    font-size: 0.85rem;
-  }
-
-  .search-submit-btn {
-    height: 40px;
-    padding: 0 var(--space-md);
+    width: 50px !important;
+    height: 50px !important;
   }
 }
